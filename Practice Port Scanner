@@ -52,3 +52,7 @@ int main() {
 
     return 0;
 }
+
+### 1. Windows (if you want to run this on Windows):
+    * You'll need to include the appropriate Windows headers (e.g., winsock2.h) and link with ws2_32.lib.
+    * Make sure you initialize the Winsock library by calling WSAStartup() before creating the socket and clean up by calling WSACleanup() after you're done.
