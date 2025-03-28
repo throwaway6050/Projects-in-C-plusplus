@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+using namespace std;
+
+// Function to check if a port is open on the target IP
+bool isPortOpen(const char* target_ip, int port) {
+    int sockfd;
+    struct sockaddr_in server_addr;
+
+    // Create socket
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) {
+        perror("Socket creation failed");
+        return false;
+    }
+
+    // Set the server address
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    server_addr.sin_addr.s_addr = inet_addr(target_ip);
+
+    // Attempt to connect to the target IP and port
+    int result = connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    if (result == 0) {
+        close(sockfd);
+        return true; // Port is open
+    } else {
+        close(sockfd);
+        return false; // Port is closed
+    }
+}
+
+int main() {
+    const char* target_ip = "192.168.1.1"; // Change this to the IP address you want to scan
+    int start_port = 1;
+    int end_port = 1024; // Scan ports from 1 to 1024
+
+    cout << "Scanning ports on " << target_ip << " from " << start_port << " to " << end_port << endl;
+
+    for (int port = start_port; port <= end_port; ++port) {
+        if (isPortOpen(target_ip, port)) {
+            cout << "Port " << port << " is OPEN" << endl;
+        }
+    }
+
+    return 0;
+}
