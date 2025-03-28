@@ -1,0 +1,24 @@
+include <iostream>
+#include <cstring> // for strcpy
+
+using namespace std;
+
+void vulnerableFunction(const char* userInput) {
+    char buffer[10]; // A small buffer that can only hold 9 characters + null terminator
+
+    // Copy user input into buffer without checking its length
+    strcpy(buffer, userInput); // Dangerous function: no bounds checking!
+
+    // Output the content of buffer
+    cout << "Buffer content: " << buffer << endl;
+}
+
+int main() {
+    // A user input longer than the buffer size (more than 9 characters)
+    const char* longInput = "ThisIsWayTooLongForTheBuffer";
+
+    cout << "Calling vulnerable function with long input..." << endl;
+    vulnerableFunction(longInput);
+
+    return 0;
+}
